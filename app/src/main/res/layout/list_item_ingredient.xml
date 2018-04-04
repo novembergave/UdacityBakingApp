@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        tools:layout_editor_absoluteY="81dp"
+        >
+
+    <android.support.constraint.Guideline
+            android:id="@+id/ingredient_quantity_guideline"
+            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.2"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/ingredient_measure_guideline"
+            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4"
+            />
+
+    <TextView
+            android:id="@+id/ingredient_quantity"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ingredient_quantity_guideline"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            tools:text="1"
+            />
+
+    <TextView
+            android:id="@+id/ingredient_measure"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ingredient_measure_guideline"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@+id/ingredient_quantity_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            tools:text="cups"
+            />
+
+    <TextView
+            android:id="@+id/ingredient_name"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@+id/ingredient_measure_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            tools:text="Eggs"
+            />
+
+</android.support.constraint.ConstraintLayout>
