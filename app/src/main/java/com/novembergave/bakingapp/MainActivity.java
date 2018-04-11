@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.novembergave.bakingapp.recyclerviews.mainactivity.MainAdapter;
 
@@ -26,6 +25,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void openActivity(int i) {
-    startActivity(RecipeActivity.launchActivity(this));
+    startActivity(RecipeActivity.launchActivity(this, String.valueOf(i)));
   }
 }

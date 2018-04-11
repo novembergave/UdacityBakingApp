@@ -3,8 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/steps_root_view"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         >
 
     <android.support.constraint.Guideline
@@ -12,19 +16,20 @@
             android:layout_height="1dp"
             android:layout_width="0dp"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.2"
+            app:layout_constraintGuide_percent="0.1"
             />
 
     <android.support.constraint.Guideline
-            android:id="@+id/ingredient_measure_guideline"
+            android:id="@+id/steps_video_guideline"
             android:layout_height="1dp"
             android:layout_width="0dp"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.4"
+            app:layout_constraintGuide_percent="0.9"
             />
 
     <TextView
-            android:id="@+id/ingredient_quantity"
+            android:id="@+id/steps_number_label"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_padding"
             android:layout_width="wrap_content"
@@ -38,31 +43,46 @@
             />
 
     <TextView
-            android:id="@+id/ingredient_measure"
+            android:id="@+id/steps_short_description"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_padding"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ingredient_measure_guideline"
+            app:layout_constraintEnd_toStartOf="@id/steps_video_guideline"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@+id/steps_number_guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
-            tools:text="cups"
+            tools:text="Prep the cookie crust."
             />
 
     <TextView
-            android:id="@+id/ingredient_name"
+            android:id="@+id/steps_long_description"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_padding"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@+id/ingredient_measure_guideline"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/steps_video_guideline"
+            app:layout_constraintStart_toEndOf="@id/steps_number_guideline"
+            app:layout_constraintTop_toBottomOf="@id/steps_short_description"
             app:layout_constraintVertical_bias="0"
-            tools:text="Eggs"
+            tools:text="Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed."
             />
+
+    <ImageView
+            android:id="@+id/steps_video_icon"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_ondemand_video_24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/steps_video_guideline"
+            app:layout_constraintTop_toTopOf="@id/steps_short_description"
+            app:layout_constraintVertical_bias="0"
+            tools:visibility="visible"
+            />
+
 
 </android.support.constraint.ConstraintLayout>
