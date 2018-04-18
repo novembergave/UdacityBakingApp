@@ -12,7 +12,7 @@ import java.util.List;
 public class IngredientsStepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   public interface StepsClickListener {
-    void viewVideo(String url);
+    void viewVideo(Step step);
   }
 
   private final int VIEW_TYPE_HEADER = 100;

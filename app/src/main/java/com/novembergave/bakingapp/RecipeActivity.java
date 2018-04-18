@@ -6,13 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.novembergave.bakingapp.recyclerviews.recipeactivity.RecipePhoneFragment;
-
 public class RecipeActivity extends AppCompatActivity {
 
   private static final String CLASS = RecipeActivity.class.getName();
   private static final String EXTRA_NAME = CLASS + ".extra_name";
-  private static final String TAG_PHONE_FRAGMENT = "tag_fragment_business_details";
+  private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
 
   public static Intent launchActivity(Context context, String name) {
     Intent intent = new Intent(context, RecipeActivity.class);
@@ -35,10 +33,11 @@ public class RecipeActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe);
-    setTitle(getIntent().getStringExtra(EXTRA_NAME));
+    String recipeName = getIntent().getStringExtra(EXTRA_NAME);
+    setTitle(recipeName);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    RecipePhoneFragment phoneFragment = RecipePhoneFragment.newInstance();
+    RecipePhoneFragment phoneFragment = RecipePhoneFragment.newInstance(recipeName);
     getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
 
   }

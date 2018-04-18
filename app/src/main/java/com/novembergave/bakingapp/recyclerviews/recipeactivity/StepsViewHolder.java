@@ -42,10 +42,8 @@ public class StepsViewHolder extends RecyclerView.ViewHolder {
     longDescription.setText(formattedDescription);
     // If there is some link to video, display video icon and enable onClick
     videoIcon.setVisibility(step.getThumbnailURL() != null || step.getVideoURL() != null ? View.VISIBLE : View.GONE);
-    if (step.getThumbnailURL() != null) {
-      rootView.setOnClickListener(click -> listener.viewVideo(step.getThumbnailURL()));
-    } else if (step.getVideoURL() != null) {
-      rootView.setOnClickListener(click -> listener.viewVideo(step.getVideoURL()));
+    if (step.getThumbnailURL() != null || step.getVideoURL() != null) {
+      rootView.setOnClickListener(click -> listener.viewVideo(step));
     }
   }
 }

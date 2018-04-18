@@ -8,11 +8,10 @@
         tools:context="com.novembergave.bakingapp.MainActivity"
         >
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/main_recycler_view"
+    <FrameLayout
+            android:id="@+id/view_step_fragment_holder"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            tools:listitem="@layout/list_item_recipe"
             />
 
 </android.support.constraint.ConstraintLayout>

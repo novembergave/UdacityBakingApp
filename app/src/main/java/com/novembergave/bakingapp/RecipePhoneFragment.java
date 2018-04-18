@@ -1,4 +1,4 @@
-package com.novembergave.bakingapp.recyclerviews.recipeactivity;
+package com.novembergave.bakingapp;
 
 
 import android.os.Bundle;
@@ -10,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.novembergave.bakingapp.R;
-import com.novembergave.bakingapp.ViewRecipeStepActivity;
 import com.novembergave.bakingapp.pojo.Ingredient;
 import com.novembergave.bakingapp.pojo.Step;
+import com.novembergave.bakingapp.recyclerviews.recipeactivity.IngredientsStepsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +20,17 @@ import java.util.UUID;
 
 public class RecipePhoneFragment extends Fragment {
 
-  public static RecipePhoneFragment newInstance() {
-    return new RecipePhoneFragment();
-  }
+  private static final String CLASS = RecipePhoneFragment.class.getName();
+  private static final String ARG_NAME = CLASS + ".arg_name";
+  private String name;
 
+  public static RecipePhoneFragment newInstance(String name) {
+    RecipePhoneFragment fragment = new RecipePhoneFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString(ARG_NAME, name);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
   private RecyclerView recyclerView;
   private IngredientsStepsAdapter adapter;
 
@@ -36,6 +42,8 @@ public class RecipePhoneFragment extends Fragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    Bundle args = getArguments();
+    name = args.getString(ARG_NAME);
     recyclerView = view.findViewById(R.id.ingredient_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     adapter = new IngredientsStepsAdapter(this::openActivity);
@@ -44,8 +52,8 @@ public class RecipePhoneFragment extends Fragment {
   }
 
 
-  private void openActivity(String url) {
-    startActivity(ViewRecipeStepActivity.launchActivity(getContext(), url));
+  private void openActivity(Step step) {
+    startActivity(ViewRecipeStepActivity.launchActivity(getContext(), name, step));
   }
 
   private List<Ingredient> generateDummyIngredientList() {
