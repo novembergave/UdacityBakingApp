@@ -4,31 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
-import com.novembergave.bakingapp.pojo.Ingredient;
-import com.novembergave.bakingapp.pojo.Step;
-import com.novembergave.bakingapp.recyclerviews.recipeactivity.IngredientsStepsAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.novembergave.bakingapp.recyclerviews.recipeactivity.RecipePhoneFragment;
 
 public class RecipeActivity extends AppCompatActivity {
 
   private static final String CLASS = RecipeActivity.class.getName();
   private static final String EXTRA_NAME = CLASS + ".extra_name";
+  private static final String TAG_PHONE_FRAGMENT = "tag_fragment_business_details";
 
   public static Intent launchActivity(Context context, String name) {
     Intent intent = new Intent(context, RecipeActivity.class);
     intent.putExtra(EXTRA_NAME, name);
     return intent;
   }
-
-  private RecyclerView recyclerView;
-  private IngredientsStepsAdapter adapter;
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -48,48 +38,9 @@ public class RecipeActivity extends AppCompatActivity {
     setTitle(getIntent().getStringExtra(EXTRA_NAME));
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    recyclerView = findViewById(R.id.ingredient_recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    adapter = new IngredientsStepsAdapter(this::openActivity);
-    recyclerView.setAdapter(adapter);
-    adapter.setData(generateDummyIngredientList(), generateDummyStepsList());
+    RecipePhoneFragment phoneFragment = RecipePhoneFragment.newInstance();
+    getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
+
   }
 
-  private void openActivity(String url) {
-    startActivity(ViewRecipeStepActivity.launchActivity(this, url));
-  }
-
-  private List<Ingredient> generateDummyIngredientList() {
-    List<Ingredient> ingredients = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      ingredients.add(createIngredient(i));
-    }
-    return ingredients;
-  }
-
-  private Ingredient createIngredient(int i) {
-    Ingredient ingredient = new Ingredient();
-    ingredient.setIngredient("Random Ingredient");
-    ingredient.setMeasure("cup");
-    ingredient.setQuantity(i);
-    return ingredient;
-  }
-
-  private List<Step> generateDummyStepsList() {
-    List<Step> steps = new ArrayList<>();
-    for (int i = 0; i < 11; i++) {
-      steps.add(createStep(i));
-    }
-    return steps;
-  }
-
-  private Step createStep(int i) {
-    Step step = new Step();
-    step.setId(i);
-    String randomDescription = String.valueOf(i+1) + ". " + UUID.randomUUID().toString();
-    step.setDescription(randomDescription);
-    step.setShortDescription(UUID.randomUUID().toString());
-    step.setThumbnailURL("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdcf9_9-final-product-brownies/9-final-product-brownies.mp4");
-    return step;
-  }
 }
