@@ -10,8 +10,7 @@ import android.view.MenuItem;
 
 import com.novembergave.bakingapp.pojo.Ingredient;
 import com.novembergave.bakingapp.pojo.Step;
-import com.novembergave.bakingapp.recyclerviews.recipeactivity.IngredientsAdapter;
-import com.novembergave.bakingapp.recyclerviews.recipeactivity.StepsAdapter;
+import com.novembergave.bakingapp.recyclerviews.recipeactivity.IngredientsStepsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +27,8 @@ public class RecipeActivity extends AppCompatActivity {
     return intent;
   }
 
-  private RecyclerView ingredientsRecyclerView;
-  private IngredientsAdapter ingredientsAdapter;
-  private RecyclerView stepsRecyclerView;
-  private StepsAdapter stepsAdapter;
+  private RecyclerView recyclerView;
+  private IngredientsStepsAdapter adapter;
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -51,17 +48,11 @@ public class RecipeActivity extends AppCompatActivity {
     setTitle(getIntent().getStringExtra(EXTRA_NAME));
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    ingredientsRecyclerView = findViewById(R.id.ingredient_recycler_view);
-    ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    ingredientsAdapter = new IngredientsAdapter();
-    ingredientsRecyclerView.setAdapter(ingredientsAdapter);
-    ingredientsAdapter.setData(generateDummyIngredientList());
-
-    stepsRecyclerView = findViewById(R.id.steps_recycler_view);
-    stepsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    stepsAdapter = new StepsAdapter(this::openActivity);
-    stepsRecyclerView.setAdapter(stepsAdapter);
-    stepsAdapter.setData(generateDummyStepsList());
+    recyclerView = findViewById(R.id.ingredient_recycler_view);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    adapter = new IngredientsStepsAdapter(this::openActivity);
+    recyclerView.setAdapter(adapter);
+    adapter.setData(generateDummyIngredientList(), generateDummyStepsList());
   }
 
   private void openActivity(String url) {

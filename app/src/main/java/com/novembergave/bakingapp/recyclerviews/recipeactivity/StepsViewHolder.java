@@ -35,7 +35,7 @@ public class StepsViewHolder extends RecyclerView.ViewHolder {
     videoIcon = itemView.findViewById(R.id.steps_video_icon);
   }
 
-  public void bindTo(Step step, StepsAdapter.StepsClickListener listener) {
+  public void bindTo(Step step, IngredientsStepsAdapter.StepsClickListener listener) {
     stepsNumber.setText(String.valueOf(step.getId()));
     shortDescription.setText(step.getShortDescription());
     String formattedDescription = removeStepNumber(step.getDescription(), step.getId());
