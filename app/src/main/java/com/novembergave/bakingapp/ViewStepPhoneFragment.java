@@ -1,5 +1,6 @@
 package com.novembergave.bakingapp;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -27,7 +28,9 @@ public class ViewStepPhoneFragment extends Fragment {
 
   private static final String CLASS = ViewStepPhoneFragment.class.getName();
   private static final String ARG_STEP = CLASS + ".arg_step";
-  private SimpleExoPlayer player;
+  private static final String STATE_PLAYBACK_POSITION = CLASS + ".state_playback_position";
+  private static final String STATE_CURRENT_WINDOW = CLASS + ".state_current_window";
+  private static final String STATE_PLAY_WHEN_READY = CLASS + ".state_play_when_ready";
 
   public static ViewStepPhoneFragment newInstance(Step step) {
     ViewStepPhoneFragment fragment = new ViewStepPhoneFragment();
@@ -41,9 +44,18 @@ public class ViewStepPhoneFragment extends Fragment {
   private TextView stepView;
   private Step step;
 
+  private SimpleExoPlayer player;
+  private Uri uri;
   private long playbackPosition;
   private int currentWindow;
-  private boolean playWhenReady = true;
+  private boolean playWhenReady;
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (uri != null)
+      initializePlayer(uri);
+  }
 
   @Override
   public void onPause() {
@@ -61,6 +73,14 @@ public class ViewStepPhoneFragment extends Fragment {
     }
   }
 
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putLong(STATE_PLAYBACK_POSITION, playbackPosition);
+    outState.putInt(STATE_CURRENT_WINDOW, currentWindow);
+    outState.putBoolean(STATE_PLAY_WHEN_READY, playWhenReady);
+  }
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,13 +92,27 @@ public class ViewStepPhoneFragment extends Fragment {
     Bundle args = getArguments();
     step = args.getParcelable(ARG_STEP);
 
+    playbackPosition = C.TIME_UNSET;
+
+    if (savedInstanceState != null) {
+      playbackPosition = savedInstanceState.getLong(STATE_PLAYBACK_POSITION);
+      currentWindow = savedInstanceState.getInt(STATE_CURRENT_WINDOW);
+      playWhenReady = savedInstanceState.getBoolean(STATE_PLAY_WHEN_READY);
+    }
+
     playerView = view.findViewById(R.id.view_step_video);
     stepView = view.findViewById(R.id.view_step_description);
     stepView.setText(step.getDescription());
-    initializePlayer();
+
+    uri = Uri.parse(getUrl());
+    if (uri != null && !Uri.EMPTY.equals(uri)) {
+      initializePlayer(uri);
+    } else {
+      handleError();
+    }
   }
 
-  private void initializePlayer() {
+  private void initializePlayer(Uri uri) {
     if (player == null) {
       player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()),
           new DefaultTrackSelector(), new DefaultLoadControl());
@@ -86,13 +120,8 @@ public class ViewStepPhoneFragment extends Fragment {
       player.setPlayWhenReady(playWhenReady);
       player.seekTo(currentWindow, playbackPosition);
     }
-    Uri uri = Uri.parse(getUrl());
-    if (uri != null && !Uri.EMPTY.equals(uri)) {
-      MediaSource mediaSource = buildMediaSource(uri);
-      player.prepare(mediaSource, true, false);
-    } else {
-      handleError();
-    }
+    MediaSource mediaSource = buildMediaSource(uri);
+    player.prepare(mediaSource, false, false);
   }
 
   private void handleError() {

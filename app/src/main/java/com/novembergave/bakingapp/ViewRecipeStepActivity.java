@@ -14,6 +14,8 @@ public class ViewRecipeStepActivity extends AppCompatActivity {
   private static final String EXTRA_NAME = CLASS + ".extra_name";
   private static final String EXTRA_STEP = CLASS + ".extra_step";
   private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
+  private static final String STATE_FRAGMENT = CLASS + ".state_fragment";
+  private ViewStepPhoneFragment phoneFragment;
 
   public static Intent launchActivity(Context context, String name, Step step) {
     Intent intent = new Intent(context, ViewRecipeStepActivity.class);
@@ -34,13 +36,24 @@ public class ViewRecipeStepActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    getSupportFragmentManager().putFragment(outState, STATE_FRAGMENT, phoneFragment);
+  }
+
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_view_recipe_step);
     setTitle(getIntent().getStringExtra(EXTRA_NAME));
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    ViewStepPhoneFragment phoneFragment = ViewStepPhoneFragment.newInstance(getIntent().getParcelableExtra(EXTRA_STEP));
-    getSupportFragmentManager().beginTransaction().replace(R.id.view_step_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
+    if (savedInstanceState != null) {
+      //Restore the fragment's instance
+      phoneFragment = (ViewStepPhoneFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
+    } else {
+      phoneFragment = ViewStepPhoneFragment.newInstance(getIntent().getParcelableExtra(EXTRA_STEP));
+      getSupportFragmentManager().beginTransaction().replace(R.id.view_step_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
+    }
   }
 }
