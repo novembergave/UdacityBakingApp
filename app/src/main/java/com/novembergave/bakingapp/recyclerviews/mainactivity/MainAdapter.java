@@ -4,6 +4,8 @@ package com.novembergave.bakingapp.recyclerviews.mainactivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.novembergave.bakingapp.pojo.Recipe;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,11 +13,11 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
   public interface RecipeClickListener {
-    void viewRecipe(int position);
+    void viewRecipe(Recipe recipe);
   }
 
   private RecipeClickListener listener;
-  private List<String> list;
+  private List<Recipe> list;
 
 
   public MainAdapter(RecipeClickListener listener) {
@@ -30,7 +32,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
   @Override
   public void onBindViewHolder(RecipeViewHolder holder, int position) {
-    holder.bindTo(position, listener);
+    holder.bindTo(list.get(position), listener);
   }
 
   @Override
@@ -38,8 +40,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
     return list.size();
   }
 
-  public void setData() {
-    list = Arrays.asList("Hi", "Bye", "Sigh");
+  public void setData(List<Recipe> list) {
+    this.list = list;
     notifyDataSetChanged();
   }
 

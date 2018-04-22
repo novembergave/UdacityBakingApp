@@ -32,4 +32,11 @@ public class FormatUtils {
     String substring = stringWithStepInFront.substring(0, 1);
     return TextUtils.isDigitsOnly(substring);
   }
+
+  public static boolean isEmpty(String string) {
+    if (string == null) {
+      return true;
+    }
+    return string.isEmpty();
+  }
 }

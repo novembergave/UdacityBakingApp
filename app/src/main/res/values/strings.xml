@@ -8,4 +8,7 @@
     <string name="ingredient">Ingredient</string>
     <string name="steps">Steps</string>
 
+    <string name="error_video">Oops, there seems to be an error loading the video</string>
+    <string name="action_close">Close</string>
+
 </resources>

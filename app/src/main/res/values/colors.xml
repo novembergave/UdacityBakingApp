@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/purple_primary</color>
     <color name="colorPrimaryDark">@color/purple_dark</color>
-    <color name="colorAccent">@color/yellow_primary</color>
+    <color name="colorAccent">@color/yellow_dark</color>
 
     <color name="purple_primary">#4a148c</color>
     <color name="purple_light">#7c43bd</color>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.novembergave.bakingapp.R;
 import com.novembergave.bakingapp.pojo.Step;
 
+import static com.novembergave.bakingapp.utils.FormatUtils.isEmpty;
 import static com.novembergave.bakingapp.utils.FormatUtils.removeStepNumber;
 
 public class StepsViewHolder extends RecyclerView.ViewHolder {
@@ -41,8 +42,8 @@ public class StepsViewHolder extends RecyclerView.ViewHolder {
     String formattedDescription = removeStepNumber(step.getDescription(), step.getId());
     longDescription.setText(formattedDescription);
     // If there is some link to video, display video icon and enable onClick
-    videoIcon.setVisibility(step.getThumbnailURL() != null || step.getVideoURL() != null ? View.VISIBLE : View.GONE);
-    if (step.getThumbnailURL() != null || step.getVideoURL() != null) {
+    videoIcon.setEnabled(!isEmpty(step.getVideoURL()));
+    if (!isEmpty(step.getVideoURL())) {
       rootView.setOnClickListener(click -> listener.viewVideo(step));
     }
   }

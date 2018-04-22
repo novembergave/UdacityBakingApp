@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.novembergave.bakingapp.R;
+import com.novembergave.bakingapp.pojo.Recipe;
 
 public class RecipeViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,8 +27,8 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder {
     recipeName = itemView.findViewById(R.id.recipe_name);
   }
 
-  public void bindTo(int position, final MainAdapter.RecipeClickListener listener) {
-    recipeName.setText(String.valueOf(position));
-    recipeName.setOnClickListener(click -> listener.viewRecipe(position));
+  public void bindTo(Recipe recipe, final MainAdapter.RecipeClickListener listener) {
+    recipeName.setText(recipe.getName());
+    recipeName.setOnClickListener(click -> listener.viewRecipe(recipe));
   }
 }

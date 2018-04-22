@@ -5,7 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.novembergave.bakingapp.pojo.Recipe;
 import com.novembergave.bakingapp.recyclerviews.mainactivity.MainAdapter;
+
+import java.util.List;
+
+import static com.novembergave.bakingapp.utils.JsonUtils.parseBakingList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,14 +22,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    List<Recipe> recipes = parseBakingList(this);
     recyclerView = findViewById(R.id.main_recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     adapter = new MainAdapter(this::openActivity);
     recyclerView.setAdapter(adapter);
-    adapter.setData();
+    adapter.setData(recipes);
   }
 
-  private void openActivity(int i) {
-    startActivity(RecipeActivity.launchActivity(this, String.valueOf(i)));
+  private void openActivity(Recipe recipe) {
+    startActivity(RecipeActivity.launchActivity(this, recipe));
   }
 }
