@@ -30,22 +30,24 @@ public class ViewStepFragment extends Fragment {
 
   private static final String CLASS = ViewStepFragment.class.getName();
   private static final String ARG_STEP = CLASS + ".arg_step";
+  private static final String ARG_STEP_POSITION = CLASS + ".arg_step_position";
   private static final String ARG_NUMBER_OF_STEPS = CLASS + ".arg_number_of_steps";
   private static final String STATE_PLAYBACK_POSITION = CLASS + ".state_playback_position";
   private static final String STATE_CURRENT_WINDOW = CLASS + ".state_current_window";
   private static final String STATE_PLAY_WHEN_READY = CLASS + ".state_play_when_ready";
 
-  public static ViewStepFragment newInstance(Step step, int numberOfSteps) {
+  public static ViewStepFragment newInstance(Step step, int stepPosition, int numberOfSteps) {
     ViewStepFragment fragment = new ViewStepFragment();
     Bundle bundle = new Bundle();
     bundle.putParcelable(ARG_STEP, step);
+    bundle.putInt(ARG_STEP_POSITION, stepPosition);
     bundle.putInt(ARG_NUMBER_OF_STEPS, numberOfSteps);
     fragment.setArguments(bundle);
     return fragment;
   }
 
   public interface OnNavigationSelected {
-    void onNavigationSelected(long step);
+    void onNavigationSelected(int stepPosition);
   }
 
   private PlayerView playerView;
@@ -114,6 +116,7 @@ public class ViewStepFragment extends Fragment {
     Bundle args = getArguments();
     step = args.getParcelable(ARG_STEP);
     int numberOfSteps = args.getInt(ARG_NUMBER_OF_STEPS);
+    int stepPosition = args.getInt(ARG_STEP_POSITION);
 
     playbackPosition = C.TIME_UNSET;
 
@@ -127,7 +130,7 @@ public class ViewStepFragment extends Fragment {
     stepView = view.findViewById(R.id.view_step_description);
     stepView.setText(step.getDescription());
 
-    setUpNavigation(view, numberOfSteps);
+    setUpNavigation(view, stepPosition, numberOfSteps);
 
     if (!getUrl().trim().isEmpty()) {
       setUpMediaPlayer();
@@ -136,7 +139,7 @@ public class ViewStepFragment extends Fragment {
     }
   }
 
-  private void setUpNavigation(View view, int numberOfSteps) {
+  private void setUpNavigation(View view, int stepPosition, int numberOfSteps) {
     View navigationHolder = view.findViewById(R.id.view_step_navigation);
     ImageView backButton = view.findViewById(R.id.view_step_back);
     ImageView forwardButton = view.findViewById(R.id.view_step_forward);
@@ -148,13 +151,13 @@ public class ViewStepFragment extends Fragment {
     }
 
     // else set up the navigation
-    if (step.getId() == numberOfSteps - 1) {
+    if (stepPosition == numberOfSteps-1) {
       forwardButton.setEnabled(false);
     } else if (step.getId() == 0) {
       backButton.setEnabled(false);
     }
-    forwardButton.setOnClickListener(click -> callback.onNavigationSelected(step.getId() + 1));
-    backButton.setOnClickListener(click -> callback.onNavigationSelected(step.getId() - 1));
+    forwardButton.setOnClickListener(click -> callback.onNavigationSelected(stepPosition + 1));
+    backButton.setOnClickListener(click -> callback.onNavigationSelected(stepPosition - 1));
   }
 
   private void hideMediaPlayer() {

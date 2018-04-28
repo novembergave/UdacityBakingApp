@@ -57,7 +57,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
     getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_steps_holder, stepsFragment, TAG_PHONE_FRAGMENT).commit();
 
     if (isTablet()) {
-      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().size());
+      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().indexOf(step), recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }
@@ -67,7 +67,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
     if (isTablet()) {
       this.step = step;
       // Replace the fragment
-      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().size());
+      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().indexOf(step), recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }
@@ -85,11 +85,11 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
   }
 
   @Override
-  public void onNavigationSelected(long step) {
+  public void onNavigationSelected(int stepPosition) {
     if (isTablet()) {
-      this.step = recipe.getSteps().get((int) step);
+      this.step = recipe.getSteps().get(stepPosition);
       // Replace the fragment
-      stepFragment = ViewStepFragment.newInstance(this.step, recipe.getSteps().size());
+      stepFragment = ViewStepFragment.newInstance(this.step, stepPosition, recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }

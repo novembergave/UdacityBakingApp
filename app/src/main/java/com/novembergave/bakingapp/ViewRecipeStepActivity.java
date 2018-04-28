@@ -11,17 +11,17 @@ import com.novembergave.bakingapp.pojo.Recipe;
 public class ViewRecipeStepActivity extends AppCompatActivity implements ViewStepFragment.OnNavigationSelected {
 
   private static final String CLASS = ViewRecipeStepActivity.class.getName();
-  private static final String EXTRA_STEP_ID = CLASS + ".extra_step";
+  private static final String EXTRA_STEP_POSITION = CLASS + ".extra_step_position";
   private static final String EXTRA_RECIPE = CLASS + ".EXTRA_RECIPE";
   private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
   private static final String STATE_FRAGMENT = CLASS + ".state_fragment";
   private ViewStepFragment phoneFragment;
   private Recipe recipe;
 
-  public static Intent launchActivity(Context context, Recipe recipe, long step) {
+  public static Intent launchActivity(Context context, Recipe recipe, int stepPosition) {
     Intent intent = new Intent(context, ViewRecipeStepActivity.class);
     intent.putExtra(EXTRA_RECIPE, recipe);
-    intent.putExtra(EXTRA_STEP_ID, step);
+    intent.putExtra(EXTRA_STEP_POSITION, stepPosition);
     return intent;
   }
 
@@ -46,7 +46,7 @@ public class ViewRecipeStepActivity extends AppCompatActivity implements ViewSte
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     recipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
-    long stepId = getIntent().getLongExtra(EXTRA_STEP_ID, 0);
+    int stepPosition = getIntent().getIntExtra(EXTRA_STEP_POSITION, 0);
 
     setContentView(R.layout.activity_view_recipe_step);
     setTitle(recipe.getName());
@@ -56,14 +56,14 @@ public class ViewRecipeStepActivity extends AppCompatActivity implements ViewSte
       //Restore the fragment's instance
       phoneFragment = (ViewStepFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
     } else {
-      phoneFragment = ViewStepFragment.newInstance(recipe.getSteps().get((int) stepId), recipe.getSteps().size());
+      phoneFragment = ViewStepFragment.newInstance(recipe.getSteps().get(stepPosition), stepPosition, recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.view_step_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
     }
   }
 
   @Override
-  public void onNavigationSelected(long step) {
-    phoneFragment = ViewStepFragment.newInstance(recipe.getSteps().get((int) step), recipe.getSteps().size());
+  public void onNavigationSelected(int stepPosition) {
+    phoneFragment = ViewStepFragment.newInstance(recipe.getSteps().get(stepPosition), stepPosition, recipe.getSteps().size());
     getSupportFragmentManager().beginTransaction().replace(R.id.view_step_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
   }
 }

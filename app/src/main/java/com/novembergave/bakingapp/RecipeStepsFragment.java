@@ -72,7 +72,7 @@ public class RecipeStepsFragment extends Fragment {
     if (getResources().getBoolean(R.bool.isTablet)) {
       callback.onStepSelected(step);
     } else {
-      startActivity(ViewRecipeStepActivity.launchActivity(getContext(), recipe, step.getId()));
+      startActivity(ViewRecipeStepActivity.launchActivity(getContext(), recipe, recipe.getSteps().indexOf(step)));
     }
   }
 }
