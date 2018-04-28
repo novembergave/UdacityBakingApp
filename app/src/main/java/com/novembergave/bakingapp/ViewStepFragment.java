@@ -12,6 +12,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.novembergave.bakingapp.pojo.Step;
@@ -28,16 +30,22 @@ public class ViewStepFragment extends Fragment {
 
   private static final String CLASS = ViewStepFragment.class.getName();
   private static final String ARG_STEP = CLASS + ".arg_step";
+  private static final String ARG_NUMBER_OF_STEPS = CLASS + ".arg_number_of_steps";
   private static final String STATE_PLAYBACK_POSITION = CLASS + ".state_playback_position";
   private static final String STATE_CURRENT_WINDOW = CLASS + ".state_current_window";
   private static final String STATE_PLAY_WHEN_READY = CLASS + ".state_play_when_ready";
 
-  public static ViewStepFragment newInstance(Step step) {
+  public static ViewStepFragment newInstance(Step step, int numberOfSteps) {
     ViewStepFragment fragment = new ViewStepFragment();
     Bundle bundle = new Bundle();
     bundle.putParcelable(ARG_STEP, step);
+    bundle.putInt(ARG_NUMBER_OF_STEPS, numberOfSteps);
     fragment.setArguments(bundle);
     return fragment;
+  }
+
+  public interface OnNavigationSelected {
+    void onNavigationSelected(long step);
   }
 
   private PlayerView playerView;
@@ -49,6 +57,7 @@ public class ViewStepFragment extends Fragment {
   private long playbackPosition;
   private int currentWindow;
   private boolean playWhenReady;
+  private OnNavigationSelected callback;
 
   @Override
   public void onResume() {
@@ -74,6 +83,19 @@ public class ViewStepFragment extends Fragment {
   }
 
   @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    // This makes sure that the container activity has implemented
+    // the callback interface. If not, it throws an exception
+    try {
+      callback = (OnNavigationSelected) context;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(context.toString()
+          + " must implement OnNavigationSelected");
+    }
+  }
+
+  @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putLong(STATE_PLAYBACK_POSITION, playbackPosition);
@@ -91,6 +113,7 @@ public class ViewStepFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     Bundle args = getArguments();
     step = args.getParcelable(ARG_STEP);
+    int numberOfSteps = args.getInt(ARG_NUMBER_OF_STEPS);
 
     playbackPosition = C.TIME_UNSET;
 
@@ -104,11 +127,34 @@ public class ViewStepFragment extends Fragment {
     stepView = view.findViewById(R.id.view_step_description);
     stepView.setText(step.getDescription());
 
+    setUpNavigation(view, numberOfSteps);
+
     if (!getUrl().trim().isEmpty()) {
       setUpMediaPlayer();
     } else {
       hideMediaPlayer();
     }
+  }
+
+  private void setUpNavigation(View view, int numberOfSteps) {
+    View navigationHolder = view.findViewById(R.id.view_step_navigation);
+    ImageView backButton = view.findViewById(R.id.view_step_back);
+    ImageView forwardButton = view.findViewById(R.id.view_step_forward);
+
+    // If there are no steps, hide the holder
+    if (numberOfSteps <= 0) {
+      navigationHolder.setVisibility(View.GONE);
+      return;
+    }
+
+    // else set up the navigation
+    if (step.getId() == numberOfSteps - 1) {
+      forwardButton.setEnabled(false);
+    } else if (step.getId() == 0) {
+      backButton.setEnabled(false);
+    }
+    forwardButton.setOnClickListener(click -> callback.onNavigationSelected(step.getId() + 1));
+    backButton.setOnClickListener(click -> callback.onNavigationSelected(step.getId() - 1));
   }
 
   private void hideMediaPlayer() {
@@ -155,7 +201,7 @@ public class ViewStepFragment extends Fragment {
   }
 
   private MediaSource buildMediaSource(Uri uri) {
-    return new ExtractorMediaSource.Factory(new DefaultHttpDataSourceFactory("exoplayer-codelab"))
+    return new ExtractorMediaSource.Factory(new DefaultHttpDataSourceFactory("exoplayer"))
         .createMediaSource(uri);
   }
 

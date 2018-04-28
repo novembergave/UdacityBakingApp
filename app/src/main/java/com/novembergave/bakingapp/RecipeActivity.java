@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.novembergave.bakingapp.pojo.Recipe;
 import com.novembergave.bakingapp.pojo.Step;
 
-public class RecipeActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepSelected{
+public class RecipeActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepSelected, ViewStepFragment.OnNavigationSelected{
 
   private static final String CLASS = RecipeActivity.class.getName();
   private static final String EXTRA_RECIPE = CLASS + ".extra_recipe";
@@ -20,6 +20,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
   private RecipeStepsFragment stepsFragment;
   private ViewStepFragment stepFragment;
   private Step step;
+  private Recipe recipe;
 
   public static Intent launchActivity(Context context, Recipe recipe) {
     Intent intent = new Intent(context, RecipeActivity.class);
@@ -42,7 +43,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe);
-    Recipe recipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
+    recipe = getIntent().getParcelableExtra(EXTRA_RECIPE);
     setTitle(recipe.getName());
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -56,7 +57,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
     getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_steps_holder, stepsFragment, TAG_PHONE_FRAGMENT).commit();
 
     if (isTablet()) {
-      stepFragment = ViewStepFragment.newInstance(step);
+      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }
@@ -66,7 +67,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
     if (isTablet()) {
       this.step = step;
       // Replace the fragment
-      stepFragment = ViewStepFragment.newInstance(step);
+      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().size());
       getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }
@@ -80,6 +81,16 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
     super.onSaveInstanceState(outState);
     if (isTablet()) {
       outState.putParcelable(STATE_STEP, step);
+    }
+  }
+
+  @Override
+  public void onNavigationSelected(long step) {
+    if (isTablet()) {
+      this.step = recipe.getSteps().get((int) step);
+      // Replace the fragment
+      stepFragment = ViewStepFragment.newInstance(this.step, recipe.getSteps().size());
+      getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
     }
   }
 }
