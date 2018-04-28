@@ -28,12 +28,11 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
   public void bindTo(boolean isIngredientHeader, boolean isStepHeader) {
     if (isIngredientHeader) {
-      header.setText(context.getString(R.string.ingredient));
+      header.setText(context.getString(R.string.ingredients));
       return;
     }
     if (isStepHeader) {
       header.setText(context.getString(R.string.steps));
-      return;
     }
   }
 }
