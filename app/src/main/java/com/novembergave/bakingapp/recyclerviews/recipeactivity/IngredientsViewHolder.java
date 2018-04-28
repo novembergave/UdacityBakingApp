@@ -31,7 +31,7 @@ public class IngredientsViewHolder extends RecyclerView.ViewHolder {
 
   public void bindTo(Ingredient ingredient) {
     quantity.setText(String.valueOf(ingredient.getQuantity()));
-    measure.setText(ingredient.getMeasure());
+    measure.setText(ingredient.getMeasure().toLowerCase());
     ingredientName.setText(ingredient.getIngredient());
   }
 }
