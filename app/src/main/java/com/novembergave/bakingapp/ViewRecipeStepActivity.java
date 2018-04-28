@@ -15,7 +15,7 @@ public class ViewRecipeStepActivity extends AppCompatActivity {
   private static final String EXTRA_STEP = CLASS + ".extra_step";
   private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
   private static final String STATE_FRAGMENT = CLASS + ".state_fragment";
-  private ViewStepPhoneFragment phoneFragment;
+  private ViewStepFragment phoneFragment;
 
   public static Intent launchActivity(Context context, String name, Step step) {
     Intent intent = new Intent(context, ViewRecipeStepActivity.class);
@@ -50,9 +50,9 @@ public class ViewRecipeStepActivity extends AppCompatActivity {
 
     if (savedInstanceState != null) {
       //Restore the fragment's instance
-      phoneFragment = (ViewStepPhoneFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
+      phoneFragment = (ViewStepFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
     } else {
-      phoneFragment = ViewStepPhoneFragment.newInstance(getIntent().getParcelableExtra(EXTRA_STEP));
+      phoneFragment = ViewStepFragment.newInstance(getIntent().getParcelableExtra(EXTRA_STEP));
       getSupportFragmentManager().beginTransaction().replace(R.id.view_step_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
     }
   }

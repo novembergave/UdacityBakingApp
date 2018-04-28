@@ -24,16 +24,16 @@ import android.widget.TextView;
 
 import com.novembergave.bakingapp.pojo.Step;
 
-public class ViewStepPhoneFragment extends Fragment {
+public class ViewStepFragment extends Fragment {
 
-  private static final String CLASS = ViewStepPhoneFragment.class.getName();
+  private static final String CLASS = ViewStepFragment.class.getName();
   private static final String ARG_STEP = CLASS + ".arg_step";
   private static final String STATE_PLAYBACK_POSITION = CLASS + ".state_playback_position";
   private static final String STATE_CURRENT_WINDOW = CLASS + ".state_current_window";
   private static final String STATE_PLAY_WHEN_READY = CLASS + ".state_play_when_ready";
 
-  public static ViewStepPhoneFragment newInstance(Step step) {
-    ViewStepPhoneFragment fragment = new ViewStepPhoneFragment();
+  public static ViewStepFragment newInstance(Step step) {
+    ViewStepFragment fragment = new ViewStepFragment();
     Bundle bundle = new Bundle();
     bundle.putParcelable(ARG_STEP, step);
     fragment.setArguments(bundle);
@@ -104,6 +104,19 @@ public class ViewStepPhoneFragment extends Fragment {
     stepView = view.findViewById(R.id.view_step_description);
     stepView.setText(step.getDescription());
 
+    if (!getUrl().trim().isEmpty()) {
+      setUpMediaPlayer();
+    } else {
+      hideMediaPlayer();
+    }
+  }
+
+  private void hideMediaPlayer() {
+    playerView.setVisibility(View.GONE);
+  }
+
+  private void setUpMediaPlayer() {
+    playerView.setVisibility(View.VISIBLE);
     uri = Uri.parse(getUrl());
     if (uri != null && !Uri.EMPTY.equals(uri)) {
       initializePlayer(uri);

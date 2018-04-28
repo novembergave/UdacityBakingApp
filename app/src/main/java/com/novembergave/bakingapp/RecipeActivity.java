@@ -7,12 +7,19 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.novembergave.bakingapp.pojo.Recipe;
+import com.novembergave.bakingapp.pojo.Step;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepSelected{
 
   private static final String CLASS = RecipeActivity.class.getName();
   private static final String EXTRA_RECIPE = CLASS + ".extra_recipe";
   private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
+  private static final String TAG_TABLET_FRAGMENT = "tag_tablet_fragment";
+  private static final String STATE_STEP = CLASS + ".state_step";
+
+  private RecipeStepsFragment stepsFragment;
+  private ViewStepFragment stepFragment;
+  private Step step;
 
   public static Intent launchActivity(Context context, Recipe recipe) {
     Intent intent = new Intent(context, RecipeActivity.class);
@@ -39,9 +46,40 @@ public class RecipeActivity extends AppCompatActivity {
     setTitle(recipe.getName());
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    RecipePhoneFragment phoneFragment = RecipePhoneFragment.newInstance(recipe);
-    getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_holder, phoneFragment, TAG_PHONE_FRAGMENT).commit();
+    if (savedInstanceState != null) {
+      step = savedInstanceState.getParcelable(STATE_STEP);
+    } else {
+      step = recipe.getSteps().get(0); // show first step
+    }
 
+    stepsFragment = RecipeStepsFragment.newInstance(recipe);
+    getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_steps_holder, stepsFragment, TAG_PHONE_FRAGMENT).commit();
+
+    if (isTablet()) {
+      stepFragment = ViewStepFragment.newInstance(step);
+      getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
+    }
   }
 
+  @Override
+  public void onStepSelected(Step step) {
+    if (isTablet()) {
+      this.step = step;
+      // Replace the fragment
+      stepFragment = ViewStepFragment.newInstance(step);
+      getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
+    }
+  }
+
+  private boolean isTablet() {
+    return findViewById(R.id.recipe_fragment_step_holder) != null;
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (isTablet()) {
+      outState.putParcelable(STATE_STEP, step);
+    }
+  }
 }

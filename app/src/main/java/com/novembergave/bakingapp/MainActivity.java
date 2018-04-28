@@ -1,7 +1,9 @@
 package com.novembergave.bakingapp;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -24,7 +26,14 @@ public class MainActivity extends AppCompatActivity {
 
     List<Recipe> recipes = parseBakingList(this);
     recyclerView = findViewById(R.id.main_recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    // Change how the recyclerView is displayed depending on the orientation
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    } else {
+      recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+    }
+
     adapter = new MainAdapter(this::openActivity);
     recyclerView.setAdapter(adapter);
     adapter.setData(recipes);
