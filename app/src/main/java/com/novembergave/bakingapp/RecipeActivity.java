@@ -16,6 +16,8 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
   private static final String TAG_PHONE_FRAGMENT = "tag_phone_fragment";
   private static final String TAG_TABLET_FRAGMENT = "tag_tablet_fragment";
   private static final String STATE_STEP = CLASS + ".state_step";
+  private static final String STATE_STEPS_FRAGMENT = CLASS + ".state_steps_fragment";
+  private static final String STATE_STEP_FRAGMENT = CLASS + ".state_step_fragment";
 
   private RecipeStepsFragment stepsFragment;
   private ViewStepFragment stepFragment;
@@ -49,16 +51,19 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
 
     if (savedInstanceState != null) {
       step = savedInstanceState.getParcelable(STATE_STEP);
+      //Restore the fragment's instance
+      stepsFragment = (RecipeStepsFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_STEPS_FRAGMENT);
+      if (isTablet()) {
+        stepFragment = (ViewStepFragment) getSupportFragmentManager().getFragment(savedInstanceState, STATE_STEP_FRAGMENT);
+      }
     } else {
       step = recipe.getSteps().get(0); // show first step
-    }
-
-    stepsFragment = RecipeStepsFragment.newInstance(recipe);
-    getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_steps_holder, stepsFragment, TAG_PHONE_FRAGMENT).commit();
-
-    if (isTablet()) {
-      stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().indexOf(step), recipe.getSteps().size());
-      getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
+      stepsFragment = RecipeStepsFragment.newInstance(recipe);
+      getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_steps_holder, stepsFragment, TAG_PHONE_FRAGMENT).commit();
+      if (isTablet()) {
+        stepFragment = ViewStepFragment.newInstance(step, recipe.getSteps().indexOf(step), recipe.getSteps().size());
+        getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_step_holder, stepFragment, TAG_TABLET_FRAGMENT).commit();
+      }
     }
   }
 
@@ -73,14 +78,16 @@ public class RecipeActivity extends AppCompatActivity implements RecipeStepsFrag
   }
 
   private boolean isTablet() {
-    return findViewById(R.id.recipe_fragment_step_holder) != null;
+    return getResources().getBoolean(R.bool.isTablet);
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+    getSupportFragmentManager().putFragment(outState, STATE_STEPS_FRAGMENT, stepsFragment);
     if (isTablet()) {
       outState.putParcelable(STATE_STEP, step);
+      getSupportFragmentManager().putFragment(outState, STATE_STEP_FRAGMENT, stepFragment);
     }
   }
 

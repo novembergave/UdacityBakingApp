@@ -100,9 +100,16 @@ public class ViewStepFragment extends Fragment {
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putLong(STATE_PLAYBACK_POSITION, playbackPosition);
-    outState.putInt(STATE_CURRENT_WINDOW, currentWindow);
-    outState.putBoolean(STATE_PLAY_WHEN_READY, playWhenReady);
+    if (player != null) {
+      outState.putLong(STATE_PLAYBACK_POSITION, player.getCurrentPosition());
+      outState.putInt(STATE_CURRENT_WINDOW, player.getCurrentWindowIndex());
+      outState.putBoolean(STATE_PLAY_WHEN_READY, player.getPlayWhenReady());
+    } else {
+      // as player might have already been released in onPause
+      outState.putLong(STATE_PLAYBACK_POSITION, playbackPosition);
+      outState.putInt(STATE_CURRENT_WINDOW, currentWindow);
+      outState.putBoolean(STATE_PLAY_WHEN_READY, playWhenReady);
+    }
   }
 
   @Nullable
