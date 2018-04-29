@@ -14,4 +14,7 @@
     <string name="error_list">Oops, there seems to be an error fetching the recipes</string>
     <string name="action_retry">Retry</string>
 
+    <string name="add_widget">Add widget</string>
+    <string name="widget_load_to_show">Load a recipe in-app to show ingredients</string>
+
 </resources>

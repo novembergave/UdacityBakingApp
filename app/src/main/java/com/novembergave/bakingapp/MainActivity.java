@@ -1,5 +1,9 @@
 package com.novembergave.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +18,8 @@ import com.novembergave.bakingapp.pojo.Recipe;
 import com.novembergave.bakingapp.recyclerviews.mainactivity.MainAdapter;
 import com.novembergave.bakingapp.utils.RecipeResource;
 import com.novembergave.bakingapp.utils.RetrofitBuilder;
+import com.novembergave.bakingapp.utils.SharedPreferencesUtils;
+import com.novembergave.bakingapp.widget.IngredientsWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void openActivity(Recipe recipe) {
+    // save to sharedPref first then update widget before launching activity
+    SharedPreferencesUtils.updateSelectedRecipe(this, recipe);
+    updateWidget();
     startActivity(RecipeActivity.launchActivity(this, recipe));
+  }
+
+  private void updateWidget() {
+    Intent intent = new Intent(this, IngredientsWidget.class);
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+    int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
+        new ComponentName(getApplication(), IngredientsWidget.class));
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+    sendBroadcast(intent);
   }
 }
