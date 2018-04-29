@@ -11,4 +11,7 @@
     <string name="error_video">Oops, there seems to be an error loading the video</string>
     <string name="action_close">Close</string>
 
+    <string name="error_list">Oops, there seems to be an error fetching the recipes</string>
+    <string name="action_retry">Retry</string>
+
 </resources>

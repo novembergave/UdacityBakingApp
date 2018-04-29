@@ -14,6 +14,8 @@ public class Recipe implements Parcelable {
   private String name;
   private List<Ingredient> ingredients;
   private List<Step> steps;
+  private int servings;
+  private String image;
 
   public Recipe() {
   }
@@ -50,20 +52,39 @@ public class Recipe implements Parcelable {
     this.steps = steps;
   }
 
+  public int getServings() {
+    return servings;
+  }
+
+  public void setServings(int servings) {
+    this.servings = servings;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Recipe recipe = (Recipe) o;
     return id == recipe.id &&
+        servings == recipe.servings &&
         Objects.equals(name, recipe.name) &&
         Objects.equals(ingredients, recipe.ingredients) &&
-        Objects.equals(steps, recipe.steps);
+        Objects.equals(steps, recipe.steps) &&
+        Objects.equals(image, recipe.image);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, ingredients, steps);
+
+    return Objects.hash(id, name, ingredients, steps, servings, image);
   }
 
   @Override
@@ -73,6 +94,8 @@ public class Recipe implements Parcelable {
         ", name='" + name + '\'' +
         ", ingredients=" + ingredients +
         ", steps=" + steps +
+        ", servings=" + servings +
+        ", image='" + image + '\'' +
         '}';
   }
 
@@ -91,6 +114,8 @@ public class Recipe implements Parcelable {
     } else {
       steps = null;
     }
+    servings = in.readInt();
+    image = in.readString();
   }
 
   @Override
@@ -114,6 +139,8 @@ public class Recipe implements Parcelable {
       dest.writeByte((byte) (0x01));
       dest.writeList(steps);
     }
+    dest.writeInt(servings);
+    dest.writeString(image);
   }
 
   @SuppressWarnings("unused")
