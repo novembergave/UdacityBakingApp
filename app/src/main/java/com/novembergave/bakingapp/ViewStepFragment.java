@@ -25,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.novembergave.bakingapp.pojo.Step;
+import com.squareup.picasso.Picasso;
+
+import static com.novembergave.bakingapp.utils.FormatUtils.isEmpty;
 
 public class ViewStepFragment extends Fragment {
 
@@ -51,6 +54,7 @@ public class ViewStepFragment extends Fragment {
   }
 
   private PlayerView playerView;
+  private ImageView thumbnailView;
   private TextView stepView;
   private Step step;
 
@@ -134,15 +138,35 @@ public class ViewStepFragment extends Fragment {
     }
 
     playerView = view.findViewById(R.id.view_step_video);
+    thumbnailView = view.findViewById(R.id.view_step_thumbnail);
     stepView = view.findViewById(R.id.view_step_description);
     stepView.setText(step.getDescription());
 
     setUpNavigation(view, stepPosition, numberOfSteps);
+    displayThumbnail();
 
     if (!getUrl().trim().isEmpty()) {
       setUpMediaPlayer();
     } else {
       hideMediaPlayer();
+    }
+  }
+
+  private void displayThumbnail() {
+    if (isEmpty(step.getThumbnailURL())) {
+      thumbnailView.setVisibility(View.GONE);
+    } else {
+      Picasso.with(getContext()).load(step.getThumbnailURL()).into(thumbnailView, new com.squareup.picasso.Callback() {
+        @Override
+        public void onSuccess() {
+          thumbnailView.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onError() {
+          thumbnailView.setVisibility(View.GONE);
+        }
+      });
     }
   }
 
@@ -216,6 +240,6 @@ public class ViewStepFragment extends Fragment {
   }
 
   private String getUrl() {
-    return step.getVideoURL() != null ? step.getVideoURL() : step.getThumbnailURL();
+    return step.getVideoURL();
   }
 }
