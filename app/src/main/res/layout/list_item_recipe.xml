@@ -43,9 +43,32 @@
                 android:padding="@dimen/medium_padding"
                 tools:text="Receipt name here"
                 card_view:layout_constraintTop_toBottomOf="@id/recipe_image"
-                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintStart_toEndOf="@id/recipe_serves_text"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintBottom_toBottomOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/recipe_serves_icon"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_padding"
+                android:layout_width="wrap_content"
+                android:src="@drawable/cutlery"
+                card_view:layout_constraintTop_toTopOf="@id/recipe_name"
+                card_view:layout_constraintBottom_toBottomOf="@id/recipe_name"
+                card_view:layout_constraintStart_toStartOf="parent"
+                />
+
+        <TextView
+                android:id="@+id/recipe_serves_text"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_padding"
+                android:layout_width="0dp"
+                tools:text="8"
+                card_view:layout_constraintStart_toEndOf="@id/recipe_serves_icon"
+                card_view:layout_constraintTop_toTopOf="@id/recipe_serves_icon"
+                card_view:layout_constraintBottom_toBottomOf="@id/recipe_serves_icon"
                 />
 
     </android.support.constraint.ConstraintLayout>
