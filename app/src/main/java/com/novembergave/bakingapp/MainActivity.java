@@ -1,8 +1,6 @@
 package com.novembergave.bakingapp;
 
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +17,7 @@ import com.novembergave.bakingapp.recyclerviews.mainactivity.MainAdapter;
 import com.novembergave.bakingapp.utils.RecipeResource;
 import com.novembergave.bakingapp.utils.RetrofitBuilder;
 import com.novembergave.bakingapp.utils.SharedPreferencesUtils;
-import com.novembergave.bakingapp.widget.IngredientsWidget;
+import com.novembergave.bakingapp.widget.IngredientsWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +30,19 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String CLASS = MainActivity.class.getName();
   private static final String STATE_RECIPES = CLASS + ".state_recipes";
+  private static final String EXTRA_RECIPE = CLASS + ".extra_recipe";
 
   private View errorView;
   private Button retryButton;
   private RecyclerView recyclerView;
   private MainAdapter adapter;
   private List<Recipe> recipes;
+
+  public static Intent launchRecipeFromWidget(Context context, Recipe recipe) {
+    Intent intent = new Intent(context, MainActivity.class);
+    intent.putExtra(EXTRA_RECIPE, recipe);
+    return intent;
+  }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
@@ -52,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // if we're launching from widget, immediately open the recipe
+    if (getIntent().getParcelableExtra(EXTRA_RECIPE) != null) {
+      startActivity(RecipeActivity.launchActivity(this, getIntent().getParcelableExtra(EXTRA_RECIPE)));
+    }
 
     errorView = findViewById(R.id.error_view);
     retryButton = findViewById(R.id.error_retry_button);
@@ -98,16 +108,8 @@ public class MainActivity extends AppCompatActivity {
   private void openActivity(Recipe recipe) {
     // save to sharedPref first then update widget before launching activity
     SharedPreferencesUtils.updateSelectedRecipe(this, recipe);
-    updateWidget();
+    IngredientsWidgetProvider.sendRefreshBroadcast(this);
     startActivity(RecipeActivity.launchActivity(this, recipe));
   }
 
-  private void updateWidget() {
-    Intent intent = new Intent(this, IngredientsWidget.class);
-    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-    int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
-        new ComponentName(getApplication(), IngredientsWidget.class));
-    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-    sendBroadcast(intent);
-  }
 }

@@ -11,7 +11,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,7 +22,7 @@
         <activity android:name=".RecipeActivity"/>
         <activity android:name=".ViewRecipeStepActivity"/>
 
-        <receiver android:name=".widget.IngredientsWidget">
+        <receiver android:name=".widget.IngredientsWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -30,6 +31,8 @@
                     android:name="android.appwidget.provider"
                     android:resource="@xml/ingredients_widget_info"/>
         </receiver>
+        <service android:name=".widget.ListViewWidgetService"
+                android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
