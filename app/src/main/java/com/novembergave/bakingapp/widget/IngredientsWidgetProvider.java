@@ -3,7 +3,6 @@ package com.novembergave.bakingapp.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -41,7 +40,7 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
   }
 
   private static void setOpenAppIntent(Context context, RemoteViews views, Intent intent) {
-    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     // Get the layout for the App Widget and attach an on-click listener to it
     views.setOnClickPendingIntent(R.id.appwidget_title, pendingIntent);
   }
@@ -62,27 +61,6 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
   @Override
   public void onDisabled(Context context) {
     // Enter relevant functionality for when the last widget is disabled
-  }
-
-  public static void sendRefreshBroadcast(Context context) {
-    Intent intent = new Intent(context, IngredientsWidgetProvider.class);
-    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-    int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(
-        new ComponentName(context, IngredientsWidgetProvider.class));
-    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-    context.sendBroadcast(intent);
-  }
-
-  @Override
-  public void onReceive(final Context context, Intent intent) {
-    final String action = intent.getAction();
-    if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-      // refresh all your widgets
-      AppWidgetManager manager = AppWidgetManager.getInstance(context);
-      ComponentName componentName = new ComponentName(context, IngredientsWidgetProvider.class);
-      manager.notifyAppWidgetViewDataChanged(manager.getAppWidgetIds(componentName), R.id.appwidget_ingredients_list);
-    }
-    super.onReceive(context, intent);
   }
 }
 

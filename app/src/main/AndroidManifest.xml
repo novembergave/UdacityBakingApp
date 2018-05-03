@@ -11,8 +11,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                android:launchMode="singleTask">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -33,6 +32,7 @@
         </receiver>
         <service android:name=".widget.ListViewWidgetService"
                 android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".widget.WidgetService" />
     </application>
 
 </manifest>
