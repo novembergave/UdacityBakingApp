@@ -48,9 +48,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     // Convert to ArrayList to save state
-    ArrayList<Recipe> recipes = new ArrayList<>();
-    recipes.addAll(this.recipes);
-    outState.putParcelableArrayList(STATE_RECIPES, recipes);
+    if (recipes != null) {
+      ArrayList<Recipe> recipes = new ArrayList<>();
+      recipes.addAll(this.recipes);
+      outState.putParcelableArrayList(STATE_RECIPES, recipes);
+    }
   }
 
   @Override
@@ -79,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     if (savedInstanceState != null) {
       recipes = savedInstanceState.getParcelableArrayList(STATE_RECIPES);
-      adapter.setData(recipes);
+      if (recipes != null) {
+        adapter.setData(recipes);
+      } else {
+        errorView.setVisibility(View.VISIBLE);
+      }
     } else {
       fetchRecipes();
     }
